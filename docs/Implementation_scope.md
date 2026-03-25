@@ -79,6 +79,37 @@ The project will follow a strict separation of concerns:
 
 This separation is fixed for the implementation because the assessment explicitly values clean boundaries between scraping and AI analysis.
 
+## Scraper Output Contract
+
+The scraper layer is responsible only for raw extraction from a single webpage. It should return structured page data that can later be used by the metrics layer and the AI layer.
+
+The scraper output should include:
+
+- `url`
+- `page_title`
+- `meta_title`
+- `meta_description`
+- `visible_text`
+- `h1_texts`
+- `h2_texts`
+- `h3_texts`
+- `links` with visible text and href
+- `images` with src and alt
+- `cta_candidates` detected from buttons and likely action links
+
+This contract is intentionally raw. It should describe what exists on the page, not what those values mean.
+
+The scraper layer should not compute:
+
+- total word count
+- heading counts
+- internal or external link counts
+- missing alt percentage
+- recommendation logic
+- AI insights
+
+Those belong to later layers in the pipeline.
+
 ## Implementation Principle
 
 The goal is not to build a large product.
