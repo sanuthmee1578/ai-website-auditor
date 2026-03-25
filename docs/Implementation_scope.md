@@ -267,6 +267,7 @@ For this assessment, the important thing is not using a heavy schema system. The
 
 If stronger validation becomes useful later, the schema approach can be upgraded, but the first version should stay minimal and easy to explain.
 
+
 ## Implementation Principle
 
 The goal is not to build a large product.
