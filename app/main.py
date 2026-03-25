@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 
 from app.ai import analyze_page
+from app.config import get_model_name, get_openai_api_key
 from app.metrics import calculate_metrics
 from app.scraper import scrape_page
 
@@ -11,6 +12,12 @@ def main() -> int:
     if len(sys.argv) < 2:
         print("Usage: python -m app.main <url>")
         return 1
+
+    api_key = get_openai_api_key()
+    model_name = get_model_name()
+
+    if not api_key:
+        print("Missing OPENAI_API_KEY in .env. Add it before enabling the real AI call.")
 
     url = sys.argv[1]
     scraped_page = scrape_page(url)
@@ -38,6 +45,7 @@ def main() -> int:
     print(f"Missing Alt %: {metrics.get('missing_alt_percentage', 0.0)}")
     print()
     print("=== AI ANALYSIS ===")
+    print(f"Model: {model_name} (placeholder output)")
     print(f"SEO Structure: {analysis.get('seo_structure', {}).get('insight', '')}")
     print(
         f"Messaging Clarity: {analysis.get('messaging_clarity', {}).get('insight', '')}"
