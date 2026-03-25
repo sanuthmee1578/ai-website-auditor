@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from typing import Any
 
 
@@ -8,6 +9,45 @@ Use only the provided extracted data and metrics.
 Avoid generic advice.
 Ground all insights in the supplied content and metrics.
 Return structured analysis only."""
+
+
+OUTPUT_SHAPE = {
+    "seo_structure": {
+        "score": 0,
+        "insight": "",
+        "metric_ref": "",
+    },
+    "messaging_clarity": {
+        "score": 0,
+        "insight": "",
+        "metric_ref": "",
+    },
+    "cta_usage": {
+        "score": 0,
+        "insight": "",
+        "metric_ref": "",
+    },
+    "content_depth": {
+        "score": 0,
+        "insight": "",
+        "metric_ref": "",
+    },
+    "ux_structural_concerns": {
+        "score": 0,
+        "insight": "",
+        "metric_ref": "",
+    },
+    "recommendations": [
+        {
+            "priority": 1,
+            "title": "",
+            "reasoning": "",
+            "action": "",
+            "metric_ref": "",
+            "expected_outcome": "",
+        }
+    ],
+}
 
 
 def build_ai_input(
@@ -29,4 +69,28 @@ def build_ai_input(
         "cta_candidates": scraped_page.get("cta_candidates", []),
         "content_snippet": content_snippet,
         "metrics": metrics,
+    }
+
+
+def build_prompt_package(
+    scraped_page: dict[str, Any],
+    metrics: dict[str, Any],
+    content_word_limit: int = 150,
+) -> dict[str, str]:
+    ai_input = build_ai_input(
+        scraped_page=scraped_page,
+        metrics=metrics,
+        content_word_limit=content_word_limit,
+    )
+
+    user_prompt = (
+        "Review this single webpage using only the provided structured input.\n\n"
+        f"INPUT:\n{json.dumps(ai_input, indent=2)}\n\n"
+        "Return structured analysis that matches this shape:\n"
+        f"{json.dumps(OUTPUT_SHAPE, indent=2)}"
+    )
+
+    return {
+        "system_prompt": SYSTEM_PROMPT,
+        "user_prompt": user_prompt,
     }
