@@ -106,3 +106,47 @@ A CTA candidate should be collected when at least one of the following is true:
 This combined rule is intentionally simple. It is strong enough for a practical assessment submission while still being easy to explain.
 
 The goal is not perfect CTA detection. The goal is a defensible rule that captures obvious buttons and primary action links without adding unnecessary complexity.
+
+## Scraper Output Structure
+
+The scraper should return one structured raw page object.
+
+At a minimum, that object should contain:
+
+- `url`
+- `page_title`
+- `meta_title`
+- `meta_description`
+- `visible_text`
+- `h1_texts`
+- `h2_texts`
+- `h3_texts`
+- `links`
+- `images`
+- `cta_candidates`
+
+The nested collections should remain simple and readable.
+
+### Links
+
+Each link item should include:
+
+- `text`
+- `href`
+
+### Images
+
+Each image item should include:
+
+- `src`
+- `alt`
+
+### CTA Candidates
+
+Each CTA candidate should include enough information to support later counting and AI input, such as:
+
+- `text`
+- `href` when applicable
+- `source_type` such as `button` or `link`
+
+The scraper output should stay consistent across pages, even when some fields are empty. Empty lists or empty strings are preferable to missing keys because they make later processing simpler and more predictable.
