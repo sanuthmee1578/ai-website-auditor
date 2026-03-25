@@ -6,6 +6,29 @@ import requests
 from bs4 import BeautifulSoup
 
 
+CTA_TEXT_KEYWORDS = (
+    "contact",
+    "get started",
+    "book",
+    "schedule",
+    "call",
+    "buy",
+    "sign up",
+    "learn more",
+    "request",
+    "start",
+)
+
+CTA_HREF_KEYWORDS = (
+    "/contact",
+    "/demo",
+    "/pricing",
+    "/signup",
+    "/book",
+    "#contact",
+)
+
+
 def _get_page_title(soup: BeautifulSoup) -> str:
     if soup.title and soup.title.string:
         return soup.title.string.strip()
@@ -54,6 +77,33 @@ def _get_images(soup: BeautifulSoup) -> list[dict[str, str]]:
     return images
 
 
+def _get_cta_candidates(soup: BeautifulSoup) -> list[dict[str, str]]:
+    cta_candidates: list[dict[str, str]] = []
+
+    for tag in soup.find_all("button"):
+        text = tag.get_text(separator=" ", strip=True)
+        if text:
+            cta_candidates.append(
+                {"text": text, "href": "", "source_type": "button"}
+            )
+
+    for tag in soup.find_all("a", href=True):
+        href = tag["href"].strip()
+        text = tag.get_text(separator=" ", strip=True)
+        text_lower = text.lower()
+        href_lower = href.lower()
+
+        matches_text = any(keyword in text_lower for keyword in CTA_TEXT_KEYWORDS)
+        matches_href = any(keyword in href_lower for keyword in CTA_HREF_KEYWORDS)
+
+        if matches_text or matches_href:
+            cta_candidates.append(
+                {"text": text, "href": href, "source_type": "link"}
+            )
+
+    return cta_candidates
+
+
 def scrape_page(url: str) -> dict[str, Any]:
     response = requests.get(url, timeout=15)
     response.raise_for_status()
@@ -67,6 +117,7 @@ def scrape_page(url: str) -> dict[str, Any]:
     h3_texts = _get_heading_texts(soup, "h3")
     links = _get_links(soup)
     images = _get_images(soup)
+    cta_candidates = _get_cta_candidates(soup)
 
     return {
         "url": url,
@@ -79,4 +130,5 @@ def scrape_page(url: str) -> dict[str, Any]:
         "h3_texts": h3_texts,
         "links": links,
         "images": images,
+        "cta_candidates": cta_candidates,
     }
