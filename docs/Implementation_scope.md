@@ -139,6 +139,38 @@ The metrics layer should not:
 
 Its job is to turn extracted page content into a reliable factual summary that can be shown directly to the user and passed into the AI layer as grounded input.
 
+Additional derived metrics may be added later, but the fields above define the required baseline for the first implementation.
+
+## AI Input Contract
+
+The AI layer should not receive raw HTML. It should receive a focused, structured input built from the scraper output and the metrics output.
+
+The AI input should include:
+
+- `url`
+- `page_title`
+- `meta_title`
+- `meta_description`
+- `h1_texts`
+- `h2_texts`
+- `h3_texts`
+- `cta_candidates`
+- a short visible content snippet
+- the full factual metrics block
+
+This input is designed to give the model enough context to reason about the page while keeping the prompt focused, explainable, and easy to debug.
+
+The AI layer should use this structured input to produce:
+
+- SEO structure observations
+- messaging clarity observations
+- CTA usage observations
+- content depth observations
+- UX or structural concerns
+- 3 to 5 prioritized recommendations
+
+The AI layer should not be responsible for discovering page facts that were never extracted or computed earlier in the pipeline.
+
 ## Implementation Principle
 
 The goal is not to build a large product.
