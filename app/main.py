@@ -26,6 +26,7 @@ def main() -> int:
     ai_result = analyze_page(scraped_page, metrics, api_key=api_key, model_name=model_name)
     analysis = ai_result.get("analysis", {})
     recommendations = analysis.get("recommendations", [])
+    ai_message = analysis.get("seo_structure", {}).get("insight", "")
 
     print(f"Website Audit: {url}")
     print()
@@ -47,6 +48,13 @@ def main() -> int:
     print()
     print("=== AI ANALYSIS ===")
     print(f"Model: {model_name}")
+    if ai_message.startswith("AI analysis unavailable:"):
+        print(ai_message)
+        print()
+        print("=== RECOMMENDATIONS ===")
+        print("AI recommendations unavailable.")
+        return 0
+
     print(f"SEO Structure: {analysis.get('seo_structure', {}).get('insight', '')}")
     print(
         f"Messaging Clarity: {analysis.get('messaging_clarity', {}).get('insight', '')}"

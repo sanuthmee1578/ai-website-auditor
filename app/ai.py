@@ -52,6 +52,37 @@ OUTPUT_SHAPE = {
 }
 
 
+def _build_error_analysis(message: str) -> dict[str, Any]:
+    return {
+        "seo_structure": {
+            "score": 0,
+            "insight": f"AI analysis unavailable: {message}",
+            "metric_ref": "",
+        },
+        "messaging_clarity": {
+            "score": 0,
+            "insight": f"AI analysis unavailable: {message}",
+            "metric_ref": "",
+        },
+        "cta_usage": {
+            "score": 0,
+            "insight": f"AI analysis unavailable: {message}",
+            "metric_ref": "",
+        },
+        "content_depth": {
+            "score": 0,
+            "insight": f"AI analysis unavailable: {message}",
+            "metric_ref": "",
+        },
+        "ux_structural_concerns": {
+            "score": 0,
+            "insight": f"AI analysis unavailable: {message}",
+            "metric_ref": "",
+        },
+        "recommendations": [],
+    }
+
+
 def build_ai_input(
     scraped_page: dict[str, Any],
     metrics: dict[str, Any],
@@ -117,12 +148,17 @@ def analyze_page(
         system_instruction=prompt_package["system_prompt"],
     )
 
-    response = model.generate_content(
-        prompt_package["user_prompt"],
-        generation_config={"response_mime_type": "application/json"},
-    )
-    raw_output = response.text or "{}"
-    analysis = json.loads(raw_output)
+    try:
+        response = model.generate_content(
+            prompt_package["user_prompt"],
+            generation_config={"response_mime_type": "application/json"},
+        )
+        raw_output = response.text or "{}"
+        analysis = json.loads(raw_output)
+    except Exception as exc:
+        error_message = str(exc).splitlines()[0].strip()
+        raw_output = ""
+        analysis = _build_error_analysis(error_message)
 
     return {
         "prompt_package": prompt_package,
