@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from openai import OpenAI
+import google.generativeai as genai
 
 
 SYSTEM_PROMPT = """You are a senior website strategist reviewing a single webpage.
@@ -111,16 +111,17 @@ def analyze_page(
         content_word_limit=content_word_limit,
     )
 
-    client = OpenAI(api_key=api_key)
-    response = client.chat.completions.create(
-        model=model_name,
-        response_format={"type": "json_object"},
-        messages=[
-            {"role": "system", "content": prompt_package["system_prompt"]},
-            {"role": "user", "content": prompt_package["user_prompt"]},
-        ],
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel(
+        model_name=model_name,
+        system_instruction=prompt_package["system_prompt"],
     )
-    raw_output = response.choices[0].message.content or "{}"
+
+    response = model.generate_content(
+        prompt_package["user_prompt"],
+        generation_config={"response_mime_type": "application/json"},
+    )
+    raw_output = response.text or "{}"
     analysis = json.loads(raw_output)
 
     return {

@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 
 from app.ai import analyze_page
-from app.config import get_model_name, get_openai_api_key
+from app.config import get_gemini_api_key, get_model_name
 from app.metrics import calculate_metrics
 from app.scraper import scrape_page
 
@@ -13,11 +13,11 @@ def main() -> int:
         print("Usage: python -m app.main <url>")
         return 1
 
-    api_key = get_openai_api_key()
+    api_key = get_gemini_api_key()
     model_name = get_model_name()
 
     if not api_key:
-        print("Missing OPENAI_API_KEY in .env. Add it before enabling the real AI call.")
+        print("Missing GEMINI_API_KEY in .env. Add it before running the AI analysis.")
         return 1
 
     url = sys.argv[1]
