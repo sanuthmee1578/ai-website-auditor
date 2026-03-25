@@ -171,6 +171,17 @@ The AI layer should use this structured input to produce:
 
 The AI layer should not be responsible for discovering page facts that were never extracted or computed earlier in the pipeline.
 
+## Data Flow Summary
+
+The implementation will follow this fixed handoff:
+
+1. `scraper.py` returns raw page data.
+2. `metrics.py` converts that raw data into deterministic factual metrics.
+3. `ai.py` receives the raw page context plus the computed metrics and returns structured analysis and recommendations.
+4. `main.py` coordinates the pipeline and presents the final output in clearly separated sections.
+
+This flow is locked for the first version of the project so that each layer has a single responsibility and the final output remains easy to explain.
+
 ## Implementation Principle
 
 The goal is not to build a large product.
