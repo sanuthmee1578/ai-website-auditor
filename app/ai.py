@@ -136,6 +136,11 @@ def analyze_page(
     model_name: str,
     content_word_limit: int = 150,
 ) -> dict[str, Any]:
+    ai_input = build_ai_input(
+        scraped_page=scraped_page,
+        metrics=metrics,
+        content_word_limit=content_word_limit,
+    )
     prompt_package = build_prompt_package(
         scraped_page=scraped_page,
         metrics=metrics,
@@ -161,6 +166,7 @@ def analyze_page(
         analysis = _build_error_analysis(error_message)
 
     return {
+        "ai_input": ai_input,
         "prompt_package": prompt_package,
         "analysis": analysis,
         "raw_output": raw_output,
