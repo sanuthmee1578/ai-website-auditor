@@ -26,6 +26,15 @@ def _get_visible_text(soup: BeautifulSoup) -> str:
     return " ".join(text_soup.get_text(separator=" ").split())
 
 
+def _get_heading_texts(soup: BeautifulSoup, tag_name: str) -> list[str]:
+    headings: list[str] = []
+    for tag in soup.find_all(tag_name):
+        text = tag.get_text(separator=" ", strip=True)
+        if text:
+            headings.append(text)
+    return headings
+
+
 def scrape_page(url: str) -> dict[str, Any]:
     response = requests.get(url, timeout=15)
     response.raise_for_status()
@@ -34,6 +43,9 @@ def scrape_page(url: str) -> dict[str, Any]:
     page_title = _get_page_title(soup)
     meta_description = _get_meta_description(soup)
     visible_text = _get_visible_text(soup)
+    h1_texts = _get_heading_texts(soup, "h1")
+    h2_texts = _get_heading_texts(soup, "h2")
+    h3_texts = _get_heading_texts(soup, "h3")
 
     return {
         "url": url,
@@ -41,4 +53,7 @@ def scrape_page(url: str) -> dict[str, Any]:
         "meta_title": page_title,
         "meta_description": meta_description,
         "visible_text": visible_text,
+        "h1_texts": h1_texts,
+        "h2_texts": h2_texts,
+        "h3_texts": h3_texts,
     }
