@@ -110,6 +110,35 @@ The scraper layer should not compute:
 
 Those belong to later layers in the pipeline.
 
+## Metrics Output Contract
+
+The metrics layer is responsible for taking raw scraped page data and converting it into deterministic factual outputs.
+
+The metrics output should include:
+
+- `word_count`
+- `h1_count`
+- `h2_count`
+- `h3_count`
+- `cta_count`
+- `internal_link_count`
+- `external_link_count`
+- `image_count`
+- `missing_alt_percentage`
+- `meta_title`
+- `meta_description`
+
+These values should be computed directly from the scraper output using clear, explainable rules.
+
+The metrics layer should not:
+
+- fetch or parse HTML
+- generate recommendations
+- write qualitative judgments
+- produce AI analysis
+
+Its job is to turn extracted page content into a reliable factual summary that can be shown directly to the user and passed into the AI layer as grounded input.
+
 ## Implementation Principle
 
 The goal is not to build a large product.
