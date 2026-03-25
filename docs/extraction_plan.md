@@ -150,3 +150,25 @@ Each CTA candidate should include enough information to support later counting a
 - `source_type` such as `button` or `link`
 
 The scraper output should stay consistent across pages, even when some fields are empty. Empty lists or empty strings are preferable to missing keys because they make later processing simpler and more predictable.
+
+## Extraction Limits and Assumptions
+
+The first version of the scraper is designed for public marketing-style webpages that can be fetched through a normal HTTP request.
+
+The scraper assumes:
+
+- the target page is publicly accessible
+- the page returns usable HTML
+- important content is present in the server response
+- the page can be analyzed without authentication
+
+The first version does not try to fully support:
+
+- login-protected pages
+- multi-step flows
+- heavy client-side applications that require advanced rendering
+- perfect extraction across every possible site structure
+
+If expected data is missing, the scraper should return empty values rather than failing silently or inventing content.
+
+This keeps the implementation practical for the assessment while making the limitations easy to explain in later documentation.
