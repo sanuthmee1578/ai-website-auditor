@@ -182,6 +182,58 @@ The implementation will follow this fixed handoff:
 
 This flow is locked for the first version of the project so that each layer has a single responsibility and the final output remains easy to explain.
 
+## Baseline Data Shapes
+
+The first implementation should use three main structured objects so data can move through the pipeline in a predictable way.
+
+### `ScrapedPageData`
+
+This object should represent the raw extracted page content and metadata returned by `scraper.py`.
+
+It should include:
+
+- `url`
+- `page_title`
+- `meta_title`
+- `meta_description`
+- `visible_text`
+- `h1_texts`
+- `h2_texts`
+- `h3_texts`
+- `links`
+- `images`
+- `cta_candidates`
+
+### `PageMetrics`
+
+This object should represent the deterministic factual metrics returned by `metrics.py`.
+
+It should include:
+
+- `word_count`
+- `h1_count`
+- `h2_count`
+- `h3_count`
+- `cta_count`
+- `internal_link_count`
+- `external_link_count`
+- `image_count`
+- `missing_alt_percentage`
+- `meta_title`
+- `meta_description`
+
+### `AuditResult`
+
+This object should represent the final structured output returned after AI analysis.
+
+It should include:
+
+- `factual_metrics`
+- `ai_insights`
+- `recommendations`
+
+These objects do not need to be complex. Simple dataclasses, dictionaries, or lightweight schema models are acceptable as long as the structure is clear and consistent.
+
 ## Implementation Principle
 
 The goal is not to build a large product.
