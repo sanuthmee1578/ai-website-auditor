@@ -31,3 +31,24 @@ The `recommendations` section should contain 3 to 5 items. Each recommendation s
 - `expected_outcome`
 
 This structure is intentionally explicit so the AI output can be validated, logged, and rendered cleanly in the CLI later.
+
+## AI Input Payload
+
+The AI layer should receive a focused structured payload built from the scraper output and the metrics output.
+
+The first version should provide:
+
+- `url`
+- `page_title`
+- `meta_title`
+- `meta_description`
+- `h1_texts`
+- `h2_texts`
+- `h3_texts`
+- `cta_candidates`
+- a short `content_snippet`
+- the factual metrics block
+
+The AI layer should not receive raw HTML.
+
+This keeps the model grounded in extracted facts while keeping the prompt small enough to remain understandable and easy to debug.
