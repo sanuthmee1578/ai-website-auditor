@@ -1,29 +1,53 @@
-# AI-Native Website Audit Tool
+# AI-Powered Website Audit Tool
 
-CLI-based single-page website audit tool built for the EIGHT25MEDIA internship assessment.
+CLI-based single-page website audit tool built for the EIGHT25 AI-Native Software Engineer assessment.
 
-## What It Does
+## Overview
 
-The tool accepts one public webpage URL, extracts deterministic on-page data, computes factual metrics, and then sends grounded structured input to Gemini for AI-generated analysis and recommendations.
+This tool accepts one public webpage URL, extracts deterministic on-page data, computes factual metrics, and then sends grounded structured input to Gemini for AI-generated analysis and recommendations.
 
-The output is intentionally separated into:
+The output is intentionally separated into four blocks:
 
 - page info
 - factual metrics
 - AI analysis
 - recommendations
 
-## Current Features
+This separation is one of the main design choices in the project: scraping and metric calculation stay deterministic, while the model is used only for interpretation.
 
-- page metadata extraction
-- visible text extraction
-- heading extraction
-- raw link, image, and CTA extraction
-- deterministic metrics for headings, links, images, and alt text
-- Gemini prompt construction and analysis call
-- graceful fallback when AI quota or API access fails
-- prompt log generation
-- one deterministic fixture-based test
+## Important
+
+Run everything from the project root directory.
+
+```powershell
+cd website-audit-tool
+```
+
+## Features
+
+### Factual Metrics
+
+- total word count
+- H1, H2, and H3 counts
+- CTA count
+- internal vs external link counts
+- image count
+- percentage of images missing alt text
+- meta title and meta description
+
+### AI Insights
+
+- SEO structure analysis
+- messaging clarity analysis
+- CTA usage analysis
+- content depth analysis
+- UX / structural concerns
+
+### Recommendations
+
+- prioritized recommendations
+- structured AI output
+- graceful fallback when AI quota or API access is unavailable
 
 ## Setup
 
@@ -41,6 +65,8 @@ Create a local `.env` file:
 GEMINI_API_KEY=your_real_key
 MODEL_NAME=gemini-2.0-flash
 ```
+
+`.env.example` is included only as a template. Do not commit a real key.
 
 ## Run
 
@@ -68,9 +94,27 @@ Internal Links: 0
 External Links: 1
 Images: 0
 Missing Alt %: 0.0
+
+=== AI ANALYSIS ===
+Model: gemini-2.0-flash
+AI analysis unavailable: 429 You exceeded your current quota...
+
+=== RECOMMENDATIONS ===
+AI recommendations unavailable.
 ```
 
-If Gemini quota is unavailable, the tool still prints factual metrics and shows a clear AI fallback message instead of crashing.
+If Gemini quota is available, the AI section returns structured insights and recommendations. If quota is unavailable, the app still returns the factual audit and logs the AI failure cleanly instead of crashing.
+
+## Repository Structure
+
+- `app/`
+  Core implementation
+- `docs/`
+  Architecture, AI design, scope, extraction plan, and trade-offs
+- `prompt_logs/`
+  Sample and generated prompt logs
+- `tests/`
+  Minimal deterministic verification
 
 ## Project Docs
 
@@ -82,7 +126,7 @@ If Gemini quota is unavailable, the tool still prints factual metrics and shows 
 
 ## Prompt Logs
 
-Prompt logs are written to `prompt_logs/` for each run and include:
+Prompt logs are written to `prompt_logs/` and include:
 
 - structured input
 - factual metrics
@@ -90,10 +134,20 @@ Prompt logs are written to `prompt_logs/` for each run and include:
 - user prompt
 - raw model output
 
+See [sample_run.md](prompt_logs/sample_run.md) for the expected format.
+
+## Testing
+
+Run the minimal deterministic test suite with:
+
+```powershell
+python -m pytest -q
+```
+
 ## What I Would Improve With More Time
 
-- better schema validation for AI output
-- cleaner fetch configuration instead of the local SSL fallback path
-- stronger prompt logging examples from successful model runs
-- better error handling around provider rate limits
-- more tests for scraper and metrics edge cases
+- stricter schema validation for AI output
+- cleaner fetch configuration instead of the current SSL fallback path
+- richer prompt log examples from successful model runs
+- stronger handling for provider quota and retry behavior
+- more scraper and metrics tests for edge cases
