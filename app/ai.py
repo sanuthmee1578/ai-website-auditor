@@ -94,3 +94,20 @@ def build_prompt_package(
         "system_prompt": SYSTEM_PROMPT,
         "user_prompt": user_prompt,
     }
+
+
+def analyze_page(
+    scraped_page: dict[str, Any],
+    metrics: dict[str, Any],
+    content_word_limit: int = 150,
+) -> dict[str, Any]:
+    prompt_package = build_prompt_package(
+        scraped_page=scraped_page,
+        metrics=metrics,
+        content_word_limit=content_word_limit,
+    )
+
+    return {
+        "prompt_package": prompt_package,
+        "analysis": OUTPUT_SHAPE,
+    }
