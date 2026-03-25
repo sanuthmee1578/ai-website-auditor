@@ -118,6 +118,7 @@ If Gemini quota is available, the AI section returns structured insights and rec
 
 ## Project Docs
 
+- [Setup Instructions](docs/setup.md)
 - [Project Scope](docs/Implementation_scope.md)
 - [Extraction Plan](docs/extraction_plan.md)
 - [Architecture](docs/architecture.md)
