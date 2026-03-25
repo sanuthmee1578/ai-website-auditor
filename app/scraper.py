@@ -35,6 +35,16 @@ def _get_heading_texts(soup: BeautifulSoup, tag_name: str) -> list[str]:
     return headings
 
 
+def _get_links(soup: BeautifulSoup) -> list[dict[str, str]]:
+    links: list[dict[str, str]] = []
+    for tag in soup.find_all("a", href=True):
+        href = tag["href"].strip()
+        text = tag.get_text(separator=" ", strip=True)
+        if href:
+            links.append({"text": text, "href": href})
+    return links
+
+
 def scrape_page(url: str) -> dict[str, Any]:
     response = requests.get(url, timeout=15)
     response.raise_for_status()
@@ -46,6 +56,7 @@ def scrape_page(url: str) -> dict[str, Any]:
     h1_texts = _get_heading_texts(soup, "h1")
     h2_texts = _get_heading_texts(soup, "h2")
     h3_texts = _get_heading_texts(soup, "h3")
+    links = _get_links(soup)
 
     return {
         "url": url,
@@ -56,4 +67,5 @@ def scrape_page(url: str) -> dict[str, Any]:
         "h1_texts": h1_texts,
         "h2_texts": h2_texts,
         "h3_texts": h3_texts,
+        "links": links,
     }
