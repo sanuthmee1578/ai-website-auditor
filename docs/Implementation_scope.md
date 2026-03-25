@@ -251,6 +251,22 @@ The application should validate required configuration at startup and fail with 
 
 This is important because the repo should feel runnable and understandable to an evaluator without requiring them to inspect the source code to discover missing setup values.
 
+## Schema Implementation Approach
+
+The first version of the project should use a lightweight schema approach.
+
+Simple Python structures are acceptable as long as the contracts remain clear and consistent. The implementation may use:
+
+- plain dictionaries
+- dataclasses
+- lightweight schema models
+
+The decision should favor readability and speed of implementation over unnecessary abstraction.
+
+For this assessment, the important thing is not using a heavy schema system. The important thing is making sure the data passed between `scraper.py`, `metrics.py`, `ai.py`, and `main.py` stays structured and predictable.
+
+If stronger validation becomes useful later, the schema approach can be upgraded, but the first version should stay minimal and easy to explain.
+
 ## Implementation Principle
 
 The goal is not to build a large product.
