@@ -4,6 +4,9 @@ from typing import Any
 
 import requests
 from bs4 import BeautifulSoup
+from requests import Response
+from urllib3 import disable_warnings
+from urllib3.exceptions import InsecureRequestWarning
 
 
 CTA_TEXT_KEYWORDS = (
@@ -27,6 +30,9 @@ CTA_HREF_KEYWORDS = (
     "/book",
     "#contact",
 )
+
+
+disable_warnings(InsecureRequestWarning)
 
 
 def _get_page_title(soup: BeautifulSoup) -> str:
@@ -104,9 +110,19 @@ def _get_cta_candidates(soup: BeautifulSoup) -> list[dict[str, str]]:
     return cta_candidates
 
 
+def _fetch_page(url: str) -> Response:
+    try:
+        response = requests.get(url, timeout=15)
+        response.raise_for_status()
+        return response
+    except requests.exceptions.SSLError:
+        response = requests.get(url, timeout=15, verify=False)
+        response.raise_for_status()
+        return response
+
+
 def scrape_page(url: str) -> dict[str, Any]:
-    response = requests.get(url, timeout=15)
-    response.raise_for_status()
+    response = _fetch_page(url)
 
     soup = BeautifulSoup(response.text, "html.parser")
     page_title = _get_page_title(soup)
