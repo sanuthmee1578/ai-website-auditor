@@ -234,6 +234,23 @@ It should include:
 
 These objects do not need to be complex. Simple dataclasses, dictionaries, or lightweight schema models are acceptable as long as the structure is clear and consistent.
 
+## Configuration and Environment Requirements
+
+The first implementation should keep configuration minimal and explicit.
+
+The repository should include a `.env.example` file so the required environment variables are clear before the tool is run.
+
+The baseline configuration should include:
+
+- `OPENAI_API_KEY`
+- `MODEL_NAME`
+
+Optional configuration may be added later if needed, such as request timeout or user agent settings, but the first version should avoid unnecessary configuration.
+
+The application should validate required configuration at startup and fail with a clear, helpful message if a required value is missing.
+
+This is important because the repo should feel runnable and understandable to an evaluator without requiring them to inspect the source code to discover missing setup values.
+
 ## Implementation Principle
 
 The goal is not to build a large product.
