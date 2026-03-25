@@ -52,3 +52,20 @@ The first version should provide:
 The AI layer should not receive raw HTML.
 
 This keeps the model grounded in extracted facts while keeping the prompt small enough to remain understandable and easy to debug.
+
+## Prompt Rules
+
+The prompt should instruct the model to behave within clear boundaries.
+
+The first version should require the model to:
+
+- use only the provided structured data
+- avoid generic website advice
+- ground each insight in actual extracted metrics or content
+- keep the analysis concise and practical
+- return structured output only
+- produce 3 to 5 prioritized recommendations
+
+The prompt should discourage the model from inventing facts that were never extracted by the scraper or computed by the metrics layer.
+
+This is important because the assessment values grounded AI analysis, not broad or speculative commentary.
