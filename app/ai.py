@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from openai import OpenAI
+
 
 SYSTEM_PROMPT = """You are a senior website strategist reviewing a single webpage.
 Use only the provided extracted data and metrics.
@@ -99,6 +101,8 @@ def build_prompt_package(
 def analyze_page(
     scraped_page: dict[str, Any],
     metrics: dict[str, Any],
+    api_key: str,
+    model_name: str,
     content_word_limit: int = 150,
 ) -> dict[str, Any]:
     prompt_package = build_prompt_package(
@@ -107,7 +111,20 @@ def analyze_page(
         content_word_limit=content_word_limit,
     )
 
+    client = OpenAI(api_key=api_key)
+    response = client.chat.completions.create(
+        model=model_name,
+        response_format={"type": "json_object"},
+        messages=[
+            {"role": "system", "content": prompt_package["system_prompt"]},
+            {"role": "user", "content": prompt_package["user_prompt"]},
+        ],
+    )
+    raw_output = response.choices[0].message.content or "{}"
+    analysis = json.loads(raw_output)
+
     return {
         "prompt_package": prompt_package,
-        "analysis": OUTPUT_SHAPE,
+        "analysis": analysis,
+        "raw_output": raw_output,
     }

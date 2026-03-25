@@ -18,11 +18,12 @@ def main() -> int:
 
     if not api_key:
         print("Missing OPENAI_API_KEY in .env. Add it before enabling the real AI call.")
+        return 1
 
     url = sys.argv[1]
     scraped_page = scrape_page(url)
     metrics = calculate_metrics(scraped_page)
-    ai_result = analyze_page(scraped_page, metrics)
+    ai_result = analyze_page(scraped_page, metrics, api_key=api_key, model_name=model_name)
     analysis = ai_result.get("analysis", {})
     recommendations = analysis.get("recommendations", [])
 
@@ -45,7 +46,7 @@ def main() -> int:
     print(f"Missing Alt %: {metrics.get('missing_alt_percentage', 0.0)}")
     print()
     print("=== AI ANALYSIS ===")
-    print(f"Model: {model_name} (placeholder output)")
+    print(f"Model: {model_name}")
     print(f"SEO Structure: {analysis.get('seo_structure', {}).get('insight', '')}")
     print(
         f"Messaging Clarity: {analysis.get('messaging_clarity', {}).get('insight', '')}"
