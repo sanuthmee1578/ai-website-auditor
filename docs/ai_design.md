@@ -69,3 +69,16 @@ The first version should require the model to:
 The prompt should discourage the model from inventing facts that were never extracted by the scraper or computed by the metrics layer.
 
 This is important because the assessment values grounded AI analysis, not broad or speculative commentary.
+
+## Current Implementation Notes
+
+The current implementation builds:
+
+- a fixed system prompt
+- a structured AI input payload
+- a user prompt that embeds the structured input
+- an explicit expected output shape
+
+The model is instructed to analyze a single webpage using only the extracted content and factual metrics already computed in Python.
+
+If the Gemini call fails because of quota or API issues, the application now returns a structured fallback message rather than crashing.
