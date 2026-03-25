@@ -92,3 +92,17 @@ The scraper should collect CTA candidates from:
 - links whose href suggests a primary action, such as contact, demo, pricing, signup, or booking paths
 
 CTA detection does not need to be perfect. It needs to be reasonable, explainable, and consistent.
+
+## CTA Detection Rule
+
+The first version of the scraper should use a combined CTA detection rule.
+
+A CTA candidate should be collected when at least one of the following is true:
+
+- the element is a `<button>` with visible text
+- the visible text contains an action-oriented phrase such as `contact`, `get started`, `book`, `schedule`, `call`, `buy`, `sign up`, `learn more`, `request`, or `start`
+- the link href suggests an action path such as `/contact`, `/demo`, `/pricing`, `/signup`, `/book`, or `#contact`
+
+This combined rule is intentionally simple. It is strong enough for a practical assessment submission while still being easy to explain.
+
+The goal is not perfect CTA detection. The goal is a defensible rule that captures obvious buttons and primary action links without adding unnecessary complexity.
