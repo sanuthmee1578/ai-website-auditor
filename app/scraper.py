@@ -45,6 +45,15 @@ def _get_links(soup: BeautifulSoup) -> list[dict[str, str]]:
     return links
 
 
+def _get_images(soup: BeautifulSoup) -> list[dict[str, str]]:
+    images: list[dict[str, str]] = []
+    for tag in soup.find_all("img"):
+        src = tag.get("src", "").strip()
+        alt = tag.get("alt", "").strip()
+        images.append({"src": src, "alt": alt})
+    return images
+
+
 def scrape_page(url: str) -> dict[str, Any]:
     response = requests.get(url, timeout=15)
     response.raise_for_status()
@@ -57,6 +66,7 @@ def scrape_page(url: str) -> dict[str, Any]:
     h2_texts = _get_heading_texts(soup, "h2")
     h3_texts = _get_heading_texts(soup, "h3")
     links = _get_links(soup)
+    images = _get_images(soup)
 
     return {
         "url": url,
@@ -68,4 +78,5 @@ def scrape_page(url: str) -> dict[str, Any]:
         "h2_texts": h2_texts,
         "h3_texts": h3_texts,
         "links": links,
+        "images": images,
     }
